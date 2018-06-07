@@ -3,6 +3,8 @@
 import numpy as np
 import cv2 as cv
 
+from .imageAlgos import thresholdOTSU, thresholdMaxEntropy
+
 class basicImage(object):
     def __init__(self):
         super(basicImage, self).__init__()
@@ -83,9 +85,13 @@ class binaryImage(basicImage):
             return self.__binaryImage.copy()
 
     def getOtsuThreshold(self):
-        return 128
+        image = self.getImage()
+        threshold = thresholdOSTU()
+        return threshold
 
     def getEntropyThreshold(self):
-        return 128
+        image = self.getImage()
+        threshold = thresholdMaxEntropy()
+        return threshold
 
 
