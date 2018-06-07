@@ -3,7 +3,7 @@
 import numpy as np
 import cv2 as cv
 
-from .imageAlgos import thresholdOTSU, thresholdMaxEntropy
+from imageAlgos import thresholdOTSU, thresholdMaxEntropy
 
 class basicImage(object):
     def __init__(self):
