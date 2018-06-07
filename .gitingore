@@ -1,0 +1,8 @@
+# python
+*.pyc
+__pycache__
+
+# images
+*.png
+*.jpg
+*.jpeg
