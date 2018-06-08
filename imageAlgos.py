@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import numpy as np
 
@@ -6,7 +7,7 @@ import numpy as np
 
 def thresholdOTSU(image, nbins=256):
     assert image.ndim == 2, 'supports 2D gray image only'
-    hist, bin_centers = histogram(image.ravel(), nbins)
+    hist, bin_centers = np.histogram(image.ravel(), nbins)
     hist = hist.astype(float)
     # class probabilities for all possible thresholds
     weight1 = np.cumsum(hist)
@@ -23,7 +24,7 @@ def thresholdOTSU(image, nbins=256):
 
 def thresholdMaxEntropy(image, nbins=256):
     assert image.ndim == 2, 'supports 2D gray image only'
-    hist, bin_centers = histogram(image.ravel(), nbins, density=True)
+    hist, bin_centers = np.histogram(image.ravel(), nbins, density=True)
     Hb = - np.cumsum(hist[:-1] * np.log2(hist[:-1]))# leng: bins - 1
     Hw = - np.cumsum(hist[1::-1] * np.log2(hist[1::-1])) # len: bins - 1
     H = Hb + Hw

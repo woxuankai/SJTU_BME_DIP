@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QScrollArea, \
         QHBoxLayout, QVBoxLayout, QSizePolicy
@@ -74,7 +75,6 @@ class scalableLabel(QScrollArea):
             currentPos = event.pos()
             hScrollBar = self.horizontalScrollBar()
             vScrollBar = self.verticalScrollBar()
-            viewportSize = self.viewport().size()
             delta = currentPos - self.__mouseLeftPressPos
             self.__mouseLeftPressPos = currentPos
             hScrollBar.setValue(hScrollBar.value() - delta.x())
@@ -101,8 +101,11 @@ if __name__ == '__main__':
     import sys, os
     from PyQt5.QtWidgets import QApplication
     from imageProcessor import basicImage
+    imgPath = 'pics/lenna.png'
+    if len(sys.argv) > 1:
+        imgPath = sys.argv[1]
     processor = basicImage()
-    processor.loadImage(sys.argv[1])
+    processor.loadImage(imgPath)
     image = processor.getImage()
 
     app = QApplication(sys.argv)
