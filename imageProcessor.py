@@ -109,10 +109,11 @@ class binaryImage(basicImage):
         threshold = thresholdMaxEntropy(image)
         return threshold
 
+imageProcessor = binaryImage
+
 if __name__ == '__main__':
     import sys, os
     from PyQt5.QtWidgets import QApplication, QWidget
-    from imageProcessor import binaryImage
     imgPath = 'pics/Lenna.png'
     if len(sys.argv) > 1:
         imgPath = sys.argv[1]
