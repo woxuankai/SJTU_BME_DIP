@@ -33,13 +33,20 @@ class project1Widget(QWidget):
         vbox.addWidget(self.histViewer)
         vbox.addLayout(hbox)
         self.setLayout(vbox)
-        # connect signals
+        # connect inner signals
         self.btnOtsu.clicked.connect(lambda \
                 p=self.processor, e=self.editThreshold: \
                 e.setText('{:}'.format(processor.getOtsuThreshold())))
         self.btnEntropy.clicked.connect(lambda  \
                 p=self.processor, e=self.editThreshold: \
                 e.setText('{:}'.format(processor.getEntropyThreshold())))
+        #self.histViewer.valueChanged.connect(lambda value, \
+        #        p=self.processor: \
+        #        p.setThreshold(value))
+        self.histViewer.valueChanged.connect(lambda value, \
+                e=self.editThreshold: \
+                e.setText('{:}'.format(value)))
+        # connect outer signals
         self.btnThreshold.clicked.connect(lambda  \
                 p=self.processor, e=self.editThreshold: \
                 processor.setThreshold(float(e.text())))
@@ -52,9 +59,6 @@ class project1Widget(QWidget):
         self.processor.imageChanged.connect(lambda \
                 p=self.processor, h=self.histViewer:
                 h.setImage(p.getImage()))
-        self.histViewer.valueChanged.connect(lambda value, \
-                p=self.processor: \
-                p.setThreshold(value))
         # finish it
         #try:
         #    image = processor.getImage()
