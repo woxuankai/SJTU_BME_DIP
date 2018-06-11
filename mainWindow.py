@@ -26,7 +26,7 @@ from project4Widget import project4Widget
 class biImageViewerWidget(imageViewerWidget):
     def __init__(self, processor, parent=None):
         super(biImageViewerWidget, self).__init__(parent)
-        self.processor = imageProcessor()
+        self.processor = processor
         self.grayViewer = imageViewerWidget()
         self.binaryViewer = imageViewerWidget()
         vbox = QVBoxLayout()
@@ -36,21 +36,20 @@ class biImageViewerWidget(imageViewerWidget):
         # signals
         self.processor.imageChanged.connect(lambda \
                 p = self.processor, gv = self.grayViewer: \
-                print('gv setImage'))
-                #gv.setImage(p.getImage()))
+                gv.setImage(p.getImage()))
         self.processor.imageChanged.connect(lambda \
                 bv = self.binaryViewer: \
-                print('bv reset'))
-                #bv.reset())
+                bv.reset())
         self.processor.thresholdChanged.connect(lambda value, \
                 p = self.processor, bv = self.binaryViewer: \
-                print('bv setImage'))
-                #gv.setImage(p.getBinaryImage()))
+                bv.setImage(p.getBinImage()))
 
 class mainWindow(QMainWindow):
     def __init__(self):
         super(mainWindow, self).__init__()
         self.processor = imageProcessor()
+        self.imageViewer = biImageViewerWidget(self.processor, None)
+        self.setCentralWidget(self.imageViewer)
         self.project1 = project1Widget(self.processor, None)
         self.dockProject1 = QDockWidget("Project 1", self)
         self.dockProject1.setObjectName("dock Project 1")
@@ -74,8 +73,6 @@ class mainWindow(QMainWindow):
         self.tabifyDockWidget(self.dockProject4, self.dockProject3)
         self.tabifyDockWidget(self.dockProject3, self.dockProject2)
         self.tabifyDockWidget(self.dockProject2, self.dockProject1)
-        self.imageViewer = biImageViewerWidget(self.processor, None)
-        self.setCentralWidget(self.imageViewer)
 
         
 if __name__ == '__main__':
