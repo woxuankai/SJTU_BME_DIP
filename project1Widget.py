@@ -19,3 +19,4 @@ class project1Widget(QWidget):
         self.processor = processor
         self.histViewer = Figure()
         self.imageViewer = imageViewerWidget()
+        

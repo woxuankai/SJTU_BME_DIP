@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QWidget, QSizePolicy
+from PyQt5.QtCore import pyqtSignal
 
 import matplotlib
 # Make sure that we are using QT5
@@ -15,13 +16,49 @@ class histWidget(FigureCanvas):
         super(histWidget, self).__init__(self.fig)
         self.setParent(parent)
         self.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.__hist = None
+        self.__value = None
+        self.valueChanged = pyqtSignal(float)
+        self.mpl_connect('button_press_event',  self.__onMousePress)        
     
-    def setValue(self, value):
-        passx
-    
-    def setImage(self, image):
+    def __drawLine(self, value):
         pass
     
-    @pyqtSlot(int)
-    def slotValueChanged(self, index):
-        self.labelIndex.setText(str(index)+'/'+str(self.sliderIndex.maximum()))
+    def __drawHist(self, hist):
+        pass
+    
+    def __setValue(self, value):
+        # draw line here
+        pass
+    
+    def __setHist(self, image):
+        pass
+ 
+    def __onMousePress(self, event):
+        print('you pressed', event.button, event.xdata, event.ydata)
+        self.__setValue(self, event.xdata)
+    
+    def setValue(self, value):
+        self.__setValue(value)
+        self.valueChanged.emit(value)
+    
+    def setHist(self, image):
+        self.__setHist(image)
+    
+ if __name__ == '__main__':
+    import sys, os
+    from PyQt5.QtWidgets import QApplication
+    from imageProcessor import basicImage
+    imgPath = 'pics/lenna.png'
+    if len(sys.argv) > 1:
+        imgPath = sys.argv[1]
+    processor = basicImage()
+    processor.loadImage(imgPath)
+    image = processor.getImage()
+
+    app = QApplication(sys.argv)
+    ex = imageViewerWidget()
+    ex.setGeometry(300, 300, 600, 600)
+    ex.setImage(image)
+    ex.show()
+    sys.exit(app.exec_())
