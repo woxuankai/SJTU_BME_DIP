@@ -36,21 +36,21 @@ class biImageViewerWidget(imageViewerWidget):
         # signals
         self.processor.imageChanged.connect(lambda \
                 p = self.processor, gv = self.grayViewer: \
-                gv.setImage(p.getImage()))
+                print('gv setImage'))
+                #gv.setImage(p.getImage()))
         self.processor.imageChanged.connect(lambda \
                 bv = self.binaryViewer: \
-                bv.reset())
+                print('bv reset'))
+                #bv.reset())
         self.processor.thresholdChanged.connect(lambda value, \
                 p = self.processor, bv = self.binaryViewer: \
-                gv.setImage(p.getBinaryImage()))
-
+                print('bv setImage'))
+                #gv.setImage(p.getBinaryImage()))
 
 class mainWindow(QMainWindow):
     def __init__(self):
         super(mainWindow, self).__init__()
         self.processor = imageProcessor()
-        self.imageViewer = biImageViewerWidget(self.processor, None)
-        self.setCentralWidget(self.imageViewer)
         self.project1 = project1Widget(self.processor, None)
         self.dockProject1 = QDockWidget("Project 1", self)
         self.dockProject1.setObjectName("dock Project 1")
@@ -71,15 +71,24 @@ class mainWindow(QMainWindow):
         self.dockProject4.setObjectName("dock Project 4")
         self.addDockWidget(Qt.RightDockWidgetArea, self.dockProject4)
         self.dockProject4.setWidget(self.project4)
-        self.tabifyDockWidget(self.dockProject1, self.dockProject2)
-        self.tabifyDockWidget(self.dockProject2, self.dockProject3)
-        self.tabifyDockWidget(self.dockProject3, self.dockProject4)
+        self.tabifyDockWidget(self.dockProject4, self.dockProject3)
+        self.tabifyDockWidget(self.dockProject3, self.dockProject2)
+        self.tabifyDockWidget(self.dockProject2, self.dockProject1)
+        self.imageViewer = biImageViewerWidget(self.processor, None)
+        self.setCentralWidget(self.imageViewer)
+
         
 if __name__ == '__main__':
-    imgPath = 'pics/Lenna.png'
-    if len(sys.argv) > 1:
-        imgPath = sys.argv[1]
+    import sys
     app = QApplication(sys.argv)
     mainWindow = mainWindow()
     mainWindow.show()
+
+    #processor = imageProcessor()
+    #viewer = biImageViewerWidget(processor)
+    #processor.loadImage('pics/Lenna.png')
+    #processor.setThreshold(128)
+    #viewer.grayViewer.setImage(processor.getImage())
+    #viewer.binaryViewer.setImage(processor.getBinImage())
+    #viewer.show()
     sys.exit(app.exec_())

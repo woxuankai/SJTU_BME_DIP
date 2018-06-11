@@ -32,11 +32,13 @@ class basicImage(QObject):
 
     # set current image
     def setImage(self, image):
-        if (self.__image is not None) and (self.__image == image):
+        print('image set')
+        if (self.__image is not None) and np.array_equal(self.__image, image):
             return
         self.__checkImage(image)
         self.__reset()
         self.__image = image
+        print('image emited!')
         self.imageChanged.emit()
 
     # get current image
@@ -80,6 +82,7 @@ class binaryImage(basicImage):
             return
         self.__reset()
         self.__threshold = threshold
+        print('threshold emited!')
         self.thresholdChanged.emit(threshold)
 
     # get current thresholding
@@ -95,7 +98,7 @@ class binaryImage(basicImage):
             image = self.getImage()
             threshold = self.getThreshold()
             maxval = 255 #uint8 max
-            self.__binaryImage = \
+            _, self.__binaryImage = \
                     cv.threshold(image, threshold, maxval, cv.THRESH_BINARY)
             return self.__binaryImage.copy()
 

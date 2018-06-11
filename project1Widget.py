@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, \
-        QHBoxLayout, QVBoxLayout, QSizePolicy 
+        QHBoxLayout, QVBoxLayout, QSizePolicy, \
+        QFileDialog
 from PyQt5.QtCore import Qt, pyqtSlot, QPoint
 
 
@@ -23,12 +24,14 @@ class project1Widget(QWidget):
         self.btnThreshold = QPushButton('Accept')
         self.btnOtsu = QPushButton('OTSU')
         self.btnEntropy = QPushButton('Entropy Method')
+        self.btnOpen = QPushButton('Open Image')
         hbox = QHBoxLayout()
         hbox.addWidget(self.btnOtsu)
         hbox.addWidget(self.btnEntropy)
         hbox.addWidget(self.labelThreshold)
         hbox.addWidget(self.editThreshold)
         hbox.addWidget(self.btnThreshold)
+        hbox.addWidget(self.btnOpen)
         vbox = QVBoxLayout()
         vbox.addWidget(self.histViewer)
         vbox.addLayout(hbox)
@@ -65,10 +68,17 @@ class project1Widget(QWidget):
         self.processor.imageChanged.connect(lambda \
                 p=self.processor, h=self.histViewer:
                 h.setImage(p.getImage()))
-        # finish it
-        #try:
-        #    image = processor.getImage()
-        #    self.histViewer.
+
+        self.btnOpen.clicked.connect(self.actLoadImage)
+
+    def actLoadImage(self):
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.ExistingFile)
+        dialog.setViewMode(QFileDialog.Detail)
+        #dialog.setOption(QFileDialog.ShowDirsOnly, True)
+        if dialog.exec_():
+            imgPath = str(dialog.selectedFiles()[0])
+            self.processor.loadImage(imgPath)
 
 
 if __name__ == '__main__':
