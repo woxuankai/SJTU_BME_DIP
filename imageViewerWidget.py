@@ -60,6 +60,11 @@ class scalableLabel(QScrollArea):
         self.imageLabel.setPixmap(scaledPixmap)
         self.imageLabel.adjustSize()
 
+    def reset(self):
+        self.__pixmap = None
+        self.imageLabel.setText('Not Available')
+        self.__scaleFactor = 1 # defalut scaleFactor
+
     def wheelEvent(self, event):
         self.setScale(self.getScale() + event.angleDelta().y()*self.wheelScale)
 
@@ -98,10 +103,10 @@ class imageViewerWidget(scalableLabel):
         self.setPixmap(pixmap)
 
 if __name__ == '__main__':
-    import sys, os
+    import sys, os, time
     from PyQt5.QtWidgets import QApplication
     from imageProcessor import basicImage
-    imgPath = 'pics/lenna.png'
+    imgPath = 'pics/Lenna.png'
     if len(sys.argv) > 1:
         imgPath = sys.argv[1]
     processor = basicImage()
@@ -111,7 +116,8 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = imageViewerWidget()
     ex.setGeometry(300, 300, 600, 600)
-    ex.setImage(image)
     ex.show()
+    ex.setImage(image)
+    #ex.reset()
     sys.exit(app.exec_())
 
