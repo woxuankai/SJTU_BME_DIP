@@ -34,12 +34,18 @@ class project1Widget(QWidget):
         vbox.addLayout(hbox)
         self.setLayout(vbox)
         # connect inner signals
+        #self.btnOtsu.clicked.connect(lambda \
+        #        p=self.processor, e=self.editThreshold: \
+        #        e.setText('{:}'.format(processor.getOtsuThreshold())))
+        #self.btnEntropy.clicked.connect(lambda  \
+        #        p=self.processor, e=self.editThreshold: \
+        #        e.setText('{:}'.format(processor.getEntropyThreshold())))
         self.btnOtsu.clicked.connect(lambda \
-                p=self.processor, e=self.editThreshold: \
-                e.setText('{:}'.format(processor.getOtsuThreshold())))
+                p=self.processor, h=self.histViewer: \
+                h.setValue(processor.getOtsuThreshold()))
         self.btnEntropy.clicked.connect(lambda  \
-                p=self.processor, e=self.editThreshold: \
-                e.setText('{:}'.format(processor.getEntropyThreshold())))
+                p=self.processor, h=self.histViewer: \
+                h.setValue(processor.getEntropyThreshold()))
         #self.histViewer.valueChanged.connect(lambda value, \
         #        p=self.processor: \
         #        p.setThreshold(value))
