@@ -7,49 +7,55 @@ from PyQt5.QtCore import pyqtSignal
 import matplotlib
 # Make sure that we are using QT5
 matplotlib.use('Qt5Agg')
-import matplotlib.backends.backend_qt5agg.FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+from matplotlib.lines import Line2D
 
 class histWidget(FigureCanvas):
     def __init__(self, parent=None):
-        self.fig = Figure()
-        super(histWidget, self).__init__(self.fig)
+        self.__fig = Figure()
+        super(histWidget, self).__init__(self.__fig)
+        self.__axes = self.__fig.subplots()
+        self.__line = None
         self.setParent(parent)
-        self.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.__hist = None
-        self.__value = None
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.valueChanged = pyqtSignal(float)
         self.mpl_connect('button_press_event',  self.__onMousePress)        
+        self.__value = None
     
     def __drawLine(self, value):
-        pass
+        if self.__line is not None:
+            self.__line.remove()
+        ylim = self.__axes.get_ylim()
+        self.__line = Line2D([value, value], ylim, color='red')
+        #print('drawing ylim'+str(ylim))
+        self.__axes.add_line(self.__line)
+        self.draw()
+        #self.draw_idle()
     
-    def __drawHist(self, hist):
-        pass
+    def __drawHist(self, x):
+        self.__axes.cla()
+        return self.__axes.hist(x, density=True)
     
-    def __setValue(self, value):
-        # draw line here
-        pass
-    
-    def __setHist(self, image):
-        pass
- 
     def __onMousePress(self, event):
-        print('you pressed', event.button, event.xdata, event.ydata)
-        self.__setValue(self, event.xdata)
+        #print('you pressed', event.button, event.xdata, event.ydata)
+        xdata = event.xdata
+        if xdata is not None:
+            self.__drawLine(event.xdata)
     
     def setValue(self, value):
-        self.__setValue(value)
+        self.__value = value
+        self.__drawLine(value)
         self.valueChanged.emit(value)
     
-    def setHist(self, image):
-        self.__setHist(image)
+    def setImage(self, image):
+        self.__drawHist(image.ravel())
     
- if __name__ == '__main__':
+if __name__ == '__main__':
     import sys, os
     from PyQt5.QtWidgets import QApplication
     from imageProcessor import basicImage
-    imgPath = 'pics/lenna.png'
+    imgPath = 'pics/Lenna.png'
     if len(sys.argv) > 1:
         imgPath = sys.argv[1]
     processor = basicImage()
@@ -57,7 +63,7 @@ class histWidget(FigureCanvas):
     image = processor.getImage()
 
     app = QApplication(sys.argv)
-    ex = imageViewerWidget()
+    ex = histWidget()
     ex.setGeometry(300, 300, 600, 600)
     ex.setImage(image)
     ex.show()
