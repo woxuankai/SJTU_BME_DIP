@@ -4,11 +4,14 @@
 import numpy as np
 import cv2 as cv
 
+from PyQt5.QtCore import pyqtSignal, QObject
+
 from imageAlgos import thresholdOTSU, thresholdMaxEntropy
 
-class basicImage(object):
-    def __init__(self):
-        super(basicImage, self).__init__()
+class basicImage(QObject):
+    imageChanged = pyqtSignal()
+    def __init__(self, parent=None):
+        super(basicImage, self).__init__(parent)
         self.__image = None
 
     # reset only variables define in current class
@@ -18,6 +21,7 @@ class basicImage(object):
     # reset all
     def reset(self):
         self.__reset()
+    
 
     @staticmethod
     def __checkImage(image):
@@ -28,9 +32,12 @@ class basicImage(object):
 
     # set current image
     def setImage(self, image):
+        if (self.__image is not None) and (self.__image == image):
+            return
         self.__checkImage(image)
         self.__reset()
         self.__image = image
+        self.imageChanged.emit()
 
     # get current image
     def getImage(self):
@@ -49,6 +56,7 @@ class basicImage(object):
 
 
 class binaryImage(basicImage):
+    thresholdChanged = pyqtSignal(float)
     def __init__(self):
         super(binaryImage, self).__init__()
         self.__threshold = None
@@ -64,9 +72,15 @@ class binaryImage(basicImage):
 
     # get current thresholding
     def setThreshold(self, threshold):
+        print('set threshold to '+str(threshold))
+        eps = 1e-5
         threshold = float(threshold)
+        if (self.__threshold is not None) and \
+                (abs(threshold - self.__threshold) < eps):
+            return
         self.__reset()
         self.__threshold = threshold
+        self.thresholdChanged.emit(threshold)
 
     # get current thresholding
     def getThreshold(self):
@@ -87,12 +101,26 @@ class binaryImage(basicImage):
 
     def getOtsuThreshold(self):
         image = self.getImage()
-        threshold = thresholdOSTU()
+        threshold = thresholdOTSU(image)
         return threshold
 
     def getEntropyThreshold(self):
         image = self.getImage()
-        threshold = thresholdMaxEntropy()
+        threshold = thresholdMaxEntropy(image)
         return threshold
 
+if __name__ == '__main__':
+    import sys, os
+    from PyQt5.QtWidgets import QApplication, QWidget
+    from imageProcessor import binaryImage
+    imgPath = 'pics/Lenna.png'
+    if len(sys.argv) > 1:
+        imgPath = sys.argv[1]
+    processor = binaryImage()
+    processor.loadImage(imgPath)
 
+    app = QApplication(sys.argv)
+    ex = QWidget()
+    ex.setGeometry(300, 300, 600, 600)
+    ex.show()
+    sys.exit(app.exec_())

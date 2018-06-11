@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
 import os,sys
 
@@ -10,8 +11,24 @@ from PyQt5.QtWidgets import QGridLayout, \
         QFileDialog, QMessageBox, QDialog
 from PyQt5.QtCore import Qt, pyqtSlot, QSize
 
-from imageProcessor import processor
-from project1Widget import project1Widget
+from PyQt5.QtWidgets import QWidget, QSlider, QLabel, \
+        QHBoxLayout, QVBoxLayout, QSizePolicy
+from PyQt5.QtCore import Qt, pyqtSlot, QPoint
+
+from imageViewerWidget import imageViewerWidget
+from histWidget import histWidget
+from imageProcessor import binaryImage as processor
+
+        
+
+class project1Widget(QWidget):
+    def __init__(self, processor, parent=None):
+        super(project1Widget, self).__init__(parent=parent)
+        self.processor = processor()
+        self.histViewer = histWidget()
+        #self.imageViewer = imageViewerWidget()
+        #self.imageViewer
+        
 
 # center widget
 class basicImageWidget(QWidget):

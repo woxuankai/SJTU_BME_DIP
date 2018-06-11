@@ -12,6 +12,7 @@ from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
 
 class histWidget(FigureCanvas):
+    valueChanged = pyqtSignal(float)
     def __init__(self, parent=None):
         self.__fig = Figure()
         super(histWidget, self).__init__(self.__fig)
@@ -19,7 +20,6 @@ class histWidget(FigureCanvas):
         self.__line = None
         self.setParent(parent)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.valueChanged = pyqtSignal(float)
         self.mpl_connect('button_press_event',  self.__onMousePress)        
         self.__value = None
     
@@ -42,6 +42,7 @@ class histWidget(FigureCanvas):
         xdata = event.xdata
         if xdata is not None:
             self.__drawLine(event.xdata)
+            self.setValue(xdata)
     
     def setValue(self, value):
         self.__value = value
