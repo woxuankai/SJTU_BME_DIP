@@ -222,6 +222,18 @@ class imageProcessor(binaryImage):
                 print('conditonal dialtion done')
                 return marker
             
+    def greyscale_reconstruction(self):
+        mask = self.getImage()
+        marker = self.grey_opening(size=(5,5))
+        eps = 1e-4
+        while True:
+            print('greyscale conditonal dialtion loop')
+            T = marker.copy()
+            marker = scipy.ndimage.morphology.grey_dilation(marker, size=(3,3))
+            marker = np.minimum(marker, mask)
+            if np.max(np.abs(T - marker)) < eps:
+                print('greyscale conditonal dialtion done')
+                return marker
 
 if __name__ == '__main__':
     import sys, os

@@ -38,11 +38,11 @@ class project4Widget(QWidget):
         vbox.addLayout(hbox)
         hbox = QHBoxLayout()
         hbox.addWidget(self.btnEdge)
-        hbox.addWidget(self.btnRestoration)
+        hbox.addWidget(self.btnMorphologicalGradient)
         vbox.addLayout(hbox)
         hbox = QHBoxLayout()
         hbox.addWidget(self.btnConditionalDilation)
-        hbox.addWidget(self.btnMorphologicalGradient)
+        hbox.addWidget(self.btnRestoration)
         vbox.addLayout(hbox)
         self.setLayout(vbox)
         self.btnDilation.clicked.connect(lambda x, \
@@ -65,7 +65,7 @@ class project4Widget(QWidget):
                 v.setImage(p.morphological_gradient()))
         self.btnRestoration.clicked.connect(lambda x,\
                 p=self.processor, v=self.imageViewer: \
-                v.setImage(p.morphological_restoration()))
+                v.setImage(p.greyscale_reconstruction()))
         self.btnConditionalDilation.clicked.connect(lambda x,\
                 p=self.processor, v=self.imageViewer: \
                 v.setImage(p.conditional_dilation()))

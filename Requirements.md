@@ -38,8 +38,8 @@ erosion,opening and closing operations.
 * Write code to realize the next functions:
   * Morphological edge detection
   * Morphological Reconstruction
-  * Conditional dilation in binary image
-  * Gray scale Reconstruction
+    * Conditional dilation in binary image
+    * Gray scale Reconstruction
   * Morphological gradient
 
 * Requirement
