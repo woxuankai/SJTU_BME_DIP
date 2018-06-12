@@ -126,6 +126,10 @@ class imageProcessor(binaryImage):
     def __reset(self):
         self.__skeleton = None
         self.__distance = None
+    
+    def setThreshold(self, threshold):
+        super(imageProcessor, self).setThreshold(threshold)
+        self.__reset()
 
     def reset(self):
         super(imageProcessorImage, self).reset()

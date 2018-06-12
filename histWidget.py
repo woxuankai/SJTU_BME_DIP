@@ -34,8 +34,11 @@ class histWidget(FigureCanvas):
         #self.draw_idle()
     
     def __drawHist(self, x):
+        self.__line = None
         self.__axes.cla()
-        return self.__axes.hist(x, density=True)
+        retval = self.__axes.hist(x, density=True)
+        self.draw()
+        return retval
     
     def __onMousePress(self, event):
         #print('you pressed', event.button, event.xdata, event.ydata)
