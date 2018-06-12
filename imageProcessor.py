@@ -203,6 +203,26 @@ class imageProcessor(binaryImage):
         return (255*skimage.morphology.reconstruction( \
                 self.__skeleton, self.__distance)).astype(np.uint8)
 
+    def morphological_edge(self):
+        return self.binary_dilation() - self.binary_erosion()
+
+    def morphological_gradient(self):
+        return self.grey_dilation(size=(3,3)) - self.grey_erosion(size=(3,3))
+
+    def conditional_dilation(self):
+        mask = self.getBinImage()
+        marker = self.binary_opening()
+        while True:
+            print('conditonal dialtion loop')
+            T = marker.copy()
+            marker = scipy.ndimage.morphology.binary_dilation(marker)
+            marker = marker*mask
+            marker = (255*(marker > 0)).astype(np.uint8)
+            if np.array_equal(T, marker):
+                print('conditonal dialtion done')
+                return marker
+            
+
 if __name__ == '__main__':
     import sys, os
     from PyQt5.QtWidgets import QApplication, QWidget
