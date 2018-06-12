@@ -32,7 +32,7 @@ class basicImage(QObject):
     def __checkImage(image):
         assert image is not None, 'empty image'
         assert isinstance(image, np.ndarray), 'image should be numpy array'
-        assert image.ndim == 2, 'grayscale image only'
+        assert image.ndim == 2, 'greyscale image only'
         assert image.dtype == np.uint8, 'uint8 pixel type only'
 
     # set current image
@@ -53,7 +53,7 @@ class basicImage(QObject):
 
     # read image from file
     def loadImage(self, imgPath):
-        image = cv.imread(imgPath, cv.IMREAD_GRAYSCALE) # grayscale, uint8 img
+        image = cv.imread(imgPath, cv.IMREAD_GRAYSCALE) # greyscale, uint8 img
         self.setImage(image)
 
     # save image to file
@@ -155,25 +155,25 @@ class imageProcessor(binaryImage):
                 image, *args, **kwargs)
         return (out*255).astype(np.uint8)
 
-    def gray_dilation(self, *args, **kwargs):
+    def grey_dilation(self, *args, **kwargs):
         image = self.getImage()
-        out = scipy.ndimage.morphology.gray_dilation(\
+        out = scipy.ndimage.morphology.grey_dilation(\
                 image, *args, **kwargs)
         return out
 
-    def gray_erosion(self, *args, **kwargs):
+    def grey_erosion(self, *args, **kwargs):
         image = self.getImage()
-        return scipy.ndimage.morphology.gray_erosion(\
+        return scipy.ndimage.morphology.grey_erosion(\
                 image, *args, **kwargs)
 
-    def gray_opening(self, *args, **kwargs):
+    def grey_opening(self, *args, **kwargs):
         image = self.getImage()
-        return scipy.ndimage.morphology.gray_opening(\
+        return scipy.ndimage.morphology.grey_opening(\
                 image, *args, **kwargs)
 
-    def gray_closing(self, *args, **kwargs):
+    def grey_closing(self, *args, **kwargs):
         image = self.getImage()
-        return scipy.ndimage.morphology.gray_closing(\
+        return scipy.ndimage.morphology.grey_closing(\
                 image, *args, **kwargs)
         
     def perform_medial_axis(self):
