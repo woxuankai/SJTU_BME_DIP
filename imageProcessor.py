@@ -3,6 +3,11 @@
 
 import numpy as np
 import cv2 as cv
+import scipy
+import scipy.ndimage
+import scipy.ndimage.morphology
+import skimage
+import skimage.morphology
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
@@ -112,7 +117,91 @@ class binaryImage(basicImage):
         threshold = thresholdMaxEntropy(image)
         return threshold
 
-imageProcessor = binaryImage
+class imageProcessor(binaryImage):
+    def __init__(self):
+        super(imageProcessor, self).__init__()
+        self.__skeleton = None
+        self.__distance = None
+
+    def __reset(self):
+        self.__skeleton = None
+        self.__distance = None
+
+    def reset(self):
+        super(imageProcessorImage, self).reset()
+        self.__reset()
+
+    def binary_dilation(self, *args, **kwargs):
+        image = self.getBinImage()
+        out = scipy.ndimage.morphology.binary_dilation(\
+                image, *args, **kwargs)
+        return (out*255).astype(np.uint8)
+
+    def binary_erosion(self, *args, **kwargs):
+        image = self.getBinImage()
+        out = scipy.ndimage.morphology.binary_erosion(\
+                image, *args, **kwargs)
+        return (out*255).astype(np.uint8)
+
+    def binary_opening(self, *args, **kwargs):
+        image = self.getBinImage()
+        out = scipy.ndimage.morphology.binary_opening(\
+                image, *args, **kwargs)
+        return (out*255).astype(np.uint8)
+
+    def binary_closing(self, *args, **kwargs):
+        image = self.getBinImage()
+        out = scipy.ndimage.morphology.binary_closing(\
+                image, *args, **kwargs)
+        return (out*255).astype(np.uint8)
+
+    def gray_dilation(self, *args, **kwargs):
+        image = self.getImage()
+        out = scipy.ndimage.morphology.gray_dilation(\
+                image, *args, **kwargs)
+        return out
+
+    def gray_erosion(self, *args, **kwargs):
+        image = self.getImage()
+        return scipy.ndimage.morphology.gray_erosion(\
+                image, *args, **kwargs)
+
+    def gray_opening(self, *args, **kwargs):
+        image = self.getImage()
+        return scipy.ndimage.morphology.gray_opening(\
+                image, *args, **kwargs)
+
+    def gray_closing(self, *args, **kwargs):
+        image = self.getImage()
+        return scipy.ndimage.morphology.gray_closing(\
+                image, *args, **kwargs)
+        
+    def perform_medial_axis(self):
+        image = self.getBinImage()
+        skeleton, dist = skimage.morphology.medial_axis(\
+                image, return_distance=True)
+        self.__distance = dist
+        self.__skeleton = skeleton
+
+    def distance(self):
+        if self.__distance is None:
+            self.perform_medial_axis()
+        if self.__distance.max() > 255:
+            return (self.__distance/ \
+                    float(self.__distance.max())).astype(np.uint8)
+        else:
+            return self.__distance.astype(np.uint8)
+
+    def skeletonize(self):
+        if self.__skeleton is None:
+            self.perform_medial_axis()
+        return (255*self.__skeleton).astype(np.uint8)
+
+    def restoration(self):
+        assert self.__skeleton is not None
+        assert self.__distance is not None
+        return (255*skimage.morphology.reconstruction( \
+                self.__skeleton, self.__distance)).astype(np.uint8)
 
 if __name__ == '__main__':
     import sys, os
@@ -120,7 +209,7 @@ if __name__ == '__main__':
     imgPath = 'pics/Lenna.png'
     if len(sys.argv) > 1:
         imgPath = sys.argv[1]
-    processor = binaryImage()
+    processor = imageProcessor()
     processor.loadImage(imgPath)
 
     app = QApplication(sys.argv)
