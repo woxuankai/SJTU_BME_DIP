@@ -18,5 +18,6 @@ just run `python3 ./mainWindow.py`
 
 # screenshots
 ![project1](screenshots/project1.png "Project1 Screenshots")
+![project2](screenshots/project2.png "Project2 Screenshots")
 ![project3](screenshots/project3.png "Project3 Screenshots")
 ![project4](screenshots/project4.png "Project4 Screenshots")
